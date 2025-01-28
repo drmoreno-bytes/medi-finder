@@ -1,4 +1,4 @@
-import { Typography, Container } from "@mui/material";
+import { Typography, Container, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDrugDetail } from "../hook/useDrugDetail";
 
@@ -8,11 +8,15 @@ export const DetailPage = () => {
   const { drugDetail, loading, error } = useDrugDetail(id);
 
   if (!drugDetail || loading) {
-    return <p>Cargando...</p>;
+    return <p className="text-blue-500 font-semibold">Loading...</p>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <p className="text-red-500 font-bold">
+        An error occurred while loading the drug details.
+      </p>
+    );
   }
 
   return (
@@ -32,7 +36,9 @@ export const DetailPage = () => {
       <Typography variant="body1" gutterBottom>
         {drugDetail.route || "No Route"}
       </Typography>
-      <button onClick={() => navigate(-1)}>Volver Atrás</button>
+      <Button variant="contained" color="primary" onClick={() => navigate(-1)}>
+        Go Back
+      </Button>
     </Container>
   );
 };

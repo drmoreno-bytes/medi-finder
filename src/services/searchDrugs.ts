@@ -34,13 +34,13 @@ export const fetchDrugs = async ({
     const data = await response.json();
 
     return (
-      data.results?.map((drug: Drug) => ({
-        id: drug.openfda?.spl_id[0] || "",
-        brandName: drug.openfda?.brand_name[0] || "No Brand Name",
-        genericName: drug.openfda?.generic_name[0] || "No Generic Name",
-        productType: drug.openfda?.product_type[0] || "No Product Type",
-        substanceName: drug.openfda?.substance_name[0] || "No Substance Name",
-        route: drug.openfda?.route[0] || "No Route",
+      (data.results || []).map((drug: Drug) => ({
+        id: drug.openfda?.spl_id?.[0] || "",
+        brandName: drug.openfda?.brand_name?.[0] || "No Brand Name",
+        genericName: drug.openfda?.generic_name?.[0] || "No Generic Name",
+        productType: drug.openfda?.product_type?.[0] || "No Product Type",
+        substanceName: drug.openfda?.substance_name?.[0] || "No Substance Name",
+        route: drug.openfda?.route?.[0] || "No Route",
       })) || []
     );
   } catch {

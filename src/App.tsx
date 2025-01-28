@@ -1,8 +1,8 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
-import { SearchPage } from './components/SearchPage'
-import { DrugDetailPage } from './components/DrugDetailPage';
+import { SearchPage } from './scenes/SearchPage'
+import { DetailPage } from './scenes/DetailPage';
 
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
      <Router>
       <Routes>
         <Route path="/" element={<SearchPage />} />
-        <Route path="/drug/:id" element={<DrugDetailPage />} />
+        <Route path="/drug/:id" element={<DetailPage />} />
       </Routes>
     </Router>
     </main>

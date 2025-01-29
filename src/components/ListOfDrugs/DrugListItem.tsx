@@ -1,35 +1,31 @@
-import { ListItem, Typography } from "@mui/material";
 import { Drug } from "./type";
+import './listOfDrugs.css';
 
 type Props = {
   drug: Drug;
   onClick: () => void;
 };
 
-export const DrugListItem = ({ drug, onClick }: Props) => (
-  <ListItem
-    component="li"
+export const DrugListItem = ({ drug, onClick }: Props) =>{ 
+  const { brandName, genericName, productType, route, substanceName } = drug;
+  return (
+  <li
     onClick={onClick}
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      padding: '10px',
-      borderBottom: '1px solid #ccc',
-    }}
+    className="drug-list-item"
   >
-    <Typography variant="h6">{drug.brandName}</Typography>
-    <Typography variant="body2">
-      <strong>Generic Name:</strong> {drug.genericName}
-    </Typography>
-    <Typography variant="body2">
-      <strong>Product Type:</strong> {drug.productType}
-    </Typography>
-    <Typography variant="body2">
-      <strong>Route:</strong> {drug.route}
-    </Typography>
-    <Typography variant="body2">
-      <strong>Substance Name:</strong> {drug.substanceName}
-    </Typography>
-  </ListItem>
+    <p className="item"><span className="type" >Brand Name:</span><span className="description">{brandName}</span></p>
+    <p className="item">
+      <span className="type">Generic Name:</span><span className="description">{genericName}</span>
+    </p>
+    <p className="item">
+      <span className="type">Product Type:</span><span className="description">{productType}</span>
+    </p>
+    <p className="item">
+      <span className="type">Route:</span><span className="description"> {route}</span>
+    </p>
+    <p className="item">
+      <span className="type">Substance Name:</span><span className="description"> {substanceName}</span>
+    </p>
+  </li>
 );
+};

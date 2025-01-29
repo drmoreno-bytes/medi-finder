@@ -2,6 +2,8 @@ import { Pagination } from '@mui/material';
 import { ListOfDrugs } from '../components/ListOfDrugs';
 import { useDrugSearch } from '../hook/useDrugSearch';
 import { useRef } from 'react';
+import MedicationIcon from '@mui/icons-material/Medication';
+import  "./searchPage.css";
 
 export const SearchPage = () => {
     const firstSearch = useRef(false);
@@ -19,6 +21,9 @@ export const SearchPage = () => {
     return (
         <div className="page">
             <header>
+                <h1 className="title">
+                  <MedicationIcon sx={{ fontSize: 40 }} style={{ color: 'blue' }} /> Drug Search
+                </h1>
                 <form
                     className="form"
                     onSubmit={(event) => {
@@ -33,14 +38,14 @@ export const SearchPage = () => {
                         name="query"
                         placeholder="Search for a drug"
                     />
-                    <button type="submit">Search</button>
+                    <button type="submit" className="hide-on-mobile">Search</button>
                 </form>
             </header>
             <main>
-                {status === 'idle' && <p>Search for a drug</p>}
-                {status === 'loading' && <p>loading...</p>}
+                {status === 'idle' && <p className="label">Search for a drug</p>}
+                {status === 'loading' && <p className="label">loading...</p>}
                 {status === 'success' && (
-                    <div className="$flex $flex-col">
+                    <div className="results">
                         <ListOfDrugs results={drugsResults} />
                         {total > itemsByPage && (
                             <Pagination

@@ -1,0 +1,8 @@
+.brand-name {
+  text-transform: lowercase;
+  font-size: 17px;
+}
+
+.brand-name::first-letter {
+  text-transform: uppercase;
+}

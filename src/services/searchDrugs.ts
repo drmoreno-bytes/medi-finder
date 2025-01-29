@@ -21,18 +21,15 @@ export const fetchDrugs = async ({
   itemsByPage = 10,
 }: Props): Promise<DrugsInfo> => {
   const skip = (page - 1) * itemsByPage;
-  const url = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${query}&limit=${itemsByPage}&skip=${skip}`;
+  const url = `https://api.fda.gov/drug/label.json?search=openfda.generic_name:${query}*&limit=${itemsByPage}&skip=${skip}`;
 
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      if (response.status === 404) {
         return {
           total: 0,
           drugs: [],
         };
-      }
-      throw new Error(`Error: ${response.status}`);
     }
 
     const data = await response.json();

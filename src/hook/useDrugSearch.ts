@@ -1,71 +1,103 @@
 import { Drug } from '../services/type';
-import { useState, ChangeEvent, useCallback, useRef } from "react";
-import { fetchDrugs } from "../services/searchDrugs";
+import { useState, useCallback, useRef } from 'react';
+import { fetchDrugs } from '../services/searchDrugs';
+import debounce from 'just-debounce-it';
 
 type Props = {
-  itemsByPage?: number;
+    itemsByPage?: number;
 };
 
-export const useDrugSearch = ({
-  itemsByPage = 10,
-}: Props) => {
-  const [query, setQuery] = useState("");
-  const [drugsResults, setDrugsResults] = useState<Drug[]>([]);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null);
-  const previousSearch = useRef(query)
+type ApiStatus = 'idle' | 'loading' | 'error' | 'success';
 
-  const getDrugs = useCallback(async (newPage = 1) => {
-    if (query === previousSearch.current) return;
+export const useDrugSearch = ({ itemsByPage = 10 }: Props) => {
+    const [query, setQuery] = useState('');
+    const [drugsResults, setDrugsResults] = useState<Drug[]>([]);
+    const [pagination, setPagination] = useState({
+        page: 1,
+        total: 0,
+    });
+    const [apiStatus, setApiStatus] = useState<ApiStatus>('idle');
+    const previousSearch = useRef({
+        query: '',
+        page: 1,
+    });
 
-    if (!query) {
-      setDrugsResults([]);
-      setTotal(0);
-      return;
-    }
+    const isQueryInvalid = (query: string) => {
+        return query.length < 2 || query.match(/^\d+$/);
+    };
 
-    try {
-      setLoading(true)
-      setError(null)
-      previousSearch.current = query
-      const data = await fetchDrugs({ query, page: newPage, itemsByPage });
-      const { drugs, total } = data;
-      setDrugsResults(drugs);
-     setPage(newPage);
-      setTotal(total);
-    } catch {
-      setError("Failed to fetch drugs")
-    } finally {
-      setLoading(false)
-    }
-  }, [itemsByPage, query]);
+    const getDrugs = useCallback(
+        async ({
+            newPage = 1,
+            query,
+        }: {
+            newPage?: number;
+            query?: string;
+        }) => {
+            if (!query) {
+                setDrugsResults([]);
+                setPagination({ page: 1, total: 0 });
+                return;
+            }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    getDrugs();
-  }
+            if (isQueryInvalid(query)) {
+                return;
+            }
 
+            try {
+                setApiStatus('loading');
+                previousSearch.current = { query, page: newPage };
+                const data = await fetchDrugs({
+                    query,
+                    page: newPage,
+                    itemsByPage,
+                });
+                const { drugs, total } = data;
+                setDrugsResults(drugs);
+                setPagination({ page: newPage, total });
+            } catch {
+                setApiStatus('error');
+            } finally {
+                setApiStatus('success');
+            }
+        },
+        [itemsByPage]
+    );
 
-  const handlePageChange = (_: ChangeEvent<unknown>, newPage: number) => {
-    previousSearch.current = ''
-    getDrugs(newPage);
-  };
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        getDrugs({});
+    };
 
-  const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+    const debouncedGetDrugs = useCallback(
+        (query: string) => {
+            debounce(() => {
+                getDrugs({ newPage: pagination.page, query });
+            }, 700)();
+        },
+        [getDrugs, pagination.page]
+    );
+    const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newSearch = event.target.value;
+        setQuery(newSearch);
+        debouncedGetDrugs(newSearch);
+    };
 
-  return {
-    query,
-    drugsResults,
-    page,
-    total,
-    error,
-    loading,
-    handleSubmit,
-    handlePageChange,
-    handleQueryChange,
-  };
+    const handlePageChange = (
+        _: React.ChangeEvent<unknown>,
+        newPage: number
+    ) => {
+        getDrugs({ newPage, query });
+    };
+
+    return {
+        query,
+        drugsResults,
+        pagination,
+        getDrugs,
+        status: apiStatus,
+        handleSubmit,
+        handleQueryChange,
+        handlePageChange,
+    };
 };

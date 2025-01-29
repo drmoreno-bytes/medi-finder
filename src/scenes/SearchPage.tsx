@@ -1,34 +1,33 @@
-import {  Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import { ListOfDrugs } from '../components/ListOfDrugs';
 import { useDrugSearch } from '../hook/useDrugSearch';
 import { useRef } from 'react';
 
 export const SearchPage = () => {
-  const firstSearch = useRef(false)
+    const firstSearch = useRef(false);
     const itemsByPage = 5;
     const {
         query,
         drugsResults,
-        page,
-        total,
-        loading,
-        error,
+        pagination: { page, total },
+        status,
         handleSubmit,
-        handlePageChange,
         handleQueryChange,
+        handlePageChange,
     } = useDrugSearch({ itemsByPage });
 
     return (
         <div className="page">
             <header>
-                <form className="form" onSubmit={(event)  =>{
-                  firstSearch.current = true
-                  handleSubmit(event)}}>
+                <form
+                    className="form"
+                    onSubmit={(event) => {
+                        firstSearch.current = true;
+                        handleSubmit(event);
+                    }}
+                >
                     <input
-                        style={{
-                            border: '1px solid transparent',
-                            borderColor: error ? 'red' : 'transparent',
-                        }}
+                        type="search"
                         onChange={handleQueryChange}
                         value={query}
                         name="query"
@@ -37,12 +36,11 @@ export const SearchPage = () => {
                     <button type="submit">Search</button>
                 </form>
             </header>
-           { firstSearch.current &&
             <main>
-                {loading ? (
-                    <p>loading...</p>
-                ) : (
-                    <div className='$flex $flex-col'>
+                {status === 'idle' && <p>Search for a drug</p>}
+                {status === 'loading' && <p>loading...</p>}
+                {status === 'success' && (
+                    <div className="$flex $flex-col">
                         <ListOfDrugs results={drugsResults} />
                         {total > itemsByPage && (
                             <Pagination
@@ -53,7 +51,7 @@ export const SearchPage = () => {
                         )}
                     </div>
                 )}
-            </main>}
+            </main>
         </div>
     );
 };

@@ -6,8 +6,10 @@ type ListOfDrugsProps = {
   results?: Drug[];
 };
 
-const NoResults = () => <Typography variant="h6">No results found</Typography>;
+const NoResults = () => 
+<Typography variant="h6">No results found</Typography>;
 
 export const ListOfDrugs = ({ results = [] }: ListOfDrugsProps) => {
+
   return results.length > 0 ? <ShowList results={results} /> : <NoResults />;
 };

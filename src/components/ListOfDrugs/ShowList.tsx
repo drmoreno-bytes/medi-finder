@@ -12,9 +12,9 @@ export const ShowList = ({ results }: ShowListProps) => {
 
   return (
     <List>
-      {results.map((drug) => (
+      {results.map((drug, index) => (
         <DrugListItem
-          key={drug.id}
+          key={`${drug.id}-${index}`}
           drug={drug}
           onClick={() => navigate(`/drug/${drug.id}`, { state: { drug } })}
         />

@@ -3,7 +3,7 @@ import { ListOfDrugs } from '../components/ListOfDrugs';
 import { useDrugSearch } from '../hook/useDrugSearch';
 import { useRef } from 'react';
 import MedicationIcon from '@mui/icons-material/Medication';
-import  "./searchPage.css";
+import './searchPage.css';
 
 export const SearchPage = () => {
     const firstSearch = useRef(false);
@@ -22,7 +22,11 @@ export const SearchPage = () => {
         <div className="page">
             <header>
                 <h1 className="title">
-                  <MedicationIcon sx={{ fontSize: 40 }} style={{ color: 'blue' }} /> Drug Search
+                    <MedicationIcon
+                        sx={{ fontSize: 40 }}
+                        style={{ color: 'blue' }}
+                    />{' '}
+                    Drug Search
                 </h1>
                 <form
                     className="form"
@@ -38,11 +42,15 @@ export const SearchPage = () => {
                         name="query"
                         placeholder="Search for a drug"
                     />
-                    <button type="submit" className="hide-on-mobile">Search</button>
+                    <button type="submit" className="hide-on-mobile">
+                        Search
+                    </button>
                 </form>
             </header>
             <main>
-                {status === 'idle' && <p className="label">Search for a drug</p>}
+                {status === 'idle' && (
+                    <p className="label">Search for a drug</p>
+                )}
                 {status === 'loading' && <p className="label">loading...</p>}
                 {status === 'success' && (
                     <div className="results">

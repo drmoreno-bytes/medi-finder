@@ -4,10 +4,8 @@ import './App.css'
 import { SearchPage } from './scenes/SearchPage'
 import { DetailPage } from './scenes/DetailPage';
 
-
 function App() {
  
-
   return (
     <main>
      <Router>

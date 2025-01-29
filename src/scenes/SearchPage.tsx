@@ -3,6 +3,7 @@ import { ListOfDrugs } from "../components/ListOfDrugs";
 import { useDrugSearch } from "../hook/useDrugSearch";
 
 export const SearchPage = () => {
+  const itemsByPage = 5;
   const {
     query,
     results,
@@ -11,7 +12,7 @@ export const SearchPage = () => {
     handleSearch,
     handlePageChange,
     handleQueryChange,
-  } = useDrugSearch();
+  } = useDrugSearch({itemsByPage});
 
   return (
     <Container>
@@ -29,11 +30,11 @@ export const SearchPage = () => {
         }}
       />
       <ListOfDrugs results={results} />
-      {total > 10 && (
+      {total > itemsByPage && (
         <Pagination
-          count={Math.ceil(total / 10)}
+          count={Math.ceil(total / itemsByPage)}
           page={page}
-          onChange={handlePageChange}
+          onChange={(_, newPage) => handlePageChange(_, newPage)}
         />
       )}
     </Container>

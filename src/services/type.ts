@@ -1,23 +1,4 @@
-export interface Root {
-  meta: Meta
-  results: Drug[]
-}
-
-export interface Meta {
-  disclaimer: string
-  terms: string
-  license: string
-  last_updated: string
-  results: Results
-}
-
-export interface Results {
-  skip: number
-  limit: number
-  total: number
-}
-
-export interface Drug {
+export type DrugInfoService = {
   effective_time: string
   inactive_ingredient: string[]
   purpose: string[]
@@ -25,7 +6,7 @@ export interface Drug {
   warnings: string[]
   questions: string[]
   spl_product_data_elements: string[]
-  openfda: Openfda
+  openfda: OpenFdaData
   version: string
   dosage_and_administration: string[]
   pregnancy_or_breast_feeding: string[]
@@ -39,7 +20,7 @@ export interface Drug {
   active_ingredient: string[]
 }
 
-export interface Openfda {
+export type OpenFdaData = {
   brand_name: string[]
   generic_name: string[]
   manufacturer_name: string[]
@@ -53,4 +34,18 @@ export interface Openfda {
   is_original_packager: boolean[]
   upc: string[]
   unii: string[]
+}
+
+export type Drug = {
+  id: string;
+  brandName: string;
+  genericName: string;
+  productType: string;
+  substanceName: string;
+  route: string;
+}
+
+export type DrugsInfo = {
+  total: number;
+  drugs: Drug[];
 }
